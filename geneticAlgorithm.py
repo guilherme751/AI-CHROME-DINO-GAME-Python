@@ -1,6 +1,8 @@
 import numpy as np
 from dinoAIParallel import manyPlaysResultsTrain, manyPlaysResultsTest
 import math, time
+from tqdm import tqdm
+
 class GeneticAlgorithm():
     def __init__(self, solution_size, population_size, elitism_percent, cross_ratio, 
                 mutation_ratio, max_iterations, max_time):
@@ -12,8 +14,7 @@ class GeneticAlgorithm():
         self.cross_ratio = cross_ratio
         self.mutation_ratio = mutation_ratio
         self.max_iterations = max_iterations
-        self.max_time = max_time
-        
+        self.max_time = max_time        
     
 
     def evaluate_population(self):
@@ -83,36 +84,49 @@ class GeneticAlgorithm():
                                 size=self.population_size - len(self.new_pop))
         
         return [self.population[i] for i in index]
+    
+    def convergent(self):
+        base = self.population[0]
+        for sol in self.population:
+            if base != sol:
+                return False
+        return True
 
     def run(self):
         self.evaluate_population()
         start = time.process_time()
         end = 0
-        iter = 0        
+        iter = 0     
+        iternotbetter = 0   
         self.best_score = 0
         bestvalues = []
-
-        while iter < self.max_iterations and end-start <=self.max_time:
-           
-            self.evaluate_population()
-            best = self.elitism()  
-            bestvalues.append(best[0])
-
-            if best[0] > self.best_score:
-                self.best_score = best[0]
-                self.best_solution = best[1]
-
-            selected = self.selection()        
-            crossed = self.crossover_step(selected)
-            mutated = self.mutation_step(crossed)
-          
-            self.population = self.new_pop + mutated       
-            print(f'ITERATION: {iter}, best_score: {self.best_score}')
+        with tqdm(total=self.max_iterations) as pbar:
+            while iter < self.max_iterations and end-start <=self.max_time:
             
-            # conv = convergent(pop)
+                self.evaluate_population()
+                best = self.elitism()  
+                bestvalues.append(best[0])
 
-            iter += 1
-            end = time.process_time()
+                if best[0] > self.best_score:
+                    iternotbetter = 0
+                    self.best_score = best[0]
+                    self.best_solution = best[1]
+                
+                selected = self.selection()        
+                crossed = self.crossover_step(selected)
+                mutated = self.mutation_step(crossed)
+            
+                self.population = self.new_pop + mutated  
+                pbar.set_description(
+                    f'Current Best: {best[0]:.2f}, Best Score: {self.best_score:.2f}'
+                )
+                
+                pbar.update()
+                # conv = convergent(pop)
+
+                iter += 1
+                iternotbetter += 1
+                end = time.process_time()
 
         return self.best_solution, self.best_score, bestvalues
     

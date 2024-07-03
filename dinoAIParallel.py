@@ -434,15 +434,15 @@ def discretizeCatVariables(obType, nextObType):
 from FNN import FNN
 class NeuralNetwork(KeyClassifier):
     def __init__(self, weights):
-        self.Wh = weights[:32].reshape(8,4)
-        self.Wo = weights[32:].reshape(5,1)               
+        self.Wh = weights[:20].reshape(5,4)
+        self.Wo = weights[20:].reshape(5,1)               
 
 
     def keySelector(self, distance, obHeight, speed, obType, 
                     nextObDistance, nextObHeight, nextObType):
        
         obType, nextObType = discretizeCatVariables(obType, nextObType)
-        X = [distance, obHeight, speed, obType, nextObDistance, nextObHeight, nextObType, 1]
+        X = [distance, obHeight, speed, obType, 1]#, #nextObDistance, nextObHeight, nextObType, 1]
         fnn = FNN(self.Wh, self.Wo)
 
         output = fnn.forward(X)

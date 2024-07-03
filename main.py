@@ -3,9 +3,9 @@ from FNN import FNN
 import matplotlib.pyplot as plt
 
 def main():
-    genAlg = GeneticAlgorithm(solution_size= 37, population_size= 100, 
-                              elitism_percent= 0.2, cross_ratio= 0.7, 
-                              mutation_ratio= 0.6, max_iterations = 1000, 
+    genAlg = GeneticAlgorithm(solution_size= 25, population_size= 100, 
+                              elitism_percent= 0.2, cross_ratio= 0.9, 
+                              mutation_ratio= 0.4, max_iterations = 100000, 
                               max_time= 10000)
     
     best_solution, _, best_values = genAlg.run()
