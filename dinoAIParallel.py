@@ -385,11 +385,8 @@ def playGame(solutions):
 
 
 
-from scipy import stats
 import numpy as np
-import math
 import time
-from tqdm import tqdm
 
 def manyPlaysResultsTrain(rounds,solutions):
     results = []
@@ -399,11 +396,12 @@ def manyPlaysResultsTrain(rounds,solutions):
    
     npResults = np.asarray(results)
 
-    mean_results = np.mean(npResults,axis = 0) # - np.std(npResults,axis=0) # axis 0 calcula media da coluna
+    mean_results = np.mean(npResults,axis = 0) #- np.std(npResults,axis=0) # axis 0 calcula media da coluna
     return mean_results
 
 
 def manyPlaysResultsTest(rounds,best_solution):
+    RENDER_GAME = True
     results = []
     for round in range(rounds):
         results += [playGame([best_solution])[0]]
@@ -413,40 +411,41 @@ def manyPlaysResultsTest(rounds,best_solution):
 
 
 
-def discretizeCatVariables(obType, nextObType):
-    type1 = 2
-    type2 = 2
+def discretizeCatVariables(obType):
+    '''
+    Discretiza variáveis categóricas da entrada. No caso, os tipos dos obstáculos.
+    '''
+    type1 = 3
+
     if isinstance(obType, Bird):
-        type1 = -1
-    elif isinstance(obType, SmallCactus):
         type1 = 0
-    elif isinstance(obType, LargeCactus):
+    elif isinstance(obType, SmallCactus):
         type1 = 1
+    elif isinstance(obType, LargeCactus):
+        type1 = 2
 
-    if isinstance(nextObType, Bird):
-        type2 = -1
-    elif isinstance(nextObType, SmallCactus):
-        type2 = 0
-    elif isinstance(nextObType, LargeCactus):
-        type2 = 1
+    return type1
 
-    return type1, type2
 from FNN import FNN
+
 class NeuralNetwork(KeyClassifier):
     def __init__(self, weights):
         self.Wh = weights[:20].reshape(5,4)
-        self.Wo = weights[20:].reshape(5,1)               
+        self.Wo = weights[20:].reshape(5,1)                  
 
 
     def keySelector(self, distance, obHeight, speed, obType, 
                     nextObDistance, nextObHeight, nextObType):
+        '''
+        Determina a ação do Dino com base no estado atual do jogo e nos pesos recebidos do algoritmo genético. 
+        '''
        
-        obType, nextObType = discretizeCatVariables(obType, nextObType)
-        X = [distance, obHeight, speed, obType, 1]#, #nextObDistance, nextObHeight, nextObType, 1]
-        fnn = FNN(self.Wh, self.Wo)
+        obType = discretizeCatVariables(obType)
+        X = [distance, obHeight, speed, obType , 1] # adiciona o bias
 
-        output = fnn.forward(X)
-    
+        fnn = FNN(self.Wh, self.Wo) # inicializa a rede
+        output = fnn.forward(X) # executa a rede
+        # determina a ação do dino com base na saída da rede
         if output > 0.55:
             return "K_UP"
         else:

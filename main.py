@@ -1,18 +1,20 @@
 from geneticAlgorithm import GeneticAlgorithm
-from FNN import FNN
-import matplotlib.pyplot as plt
+import numpy as np
 
 def main():
     genAlg = GeneticAlgorithm(solution_size= 25, population_size= 100, 
-                              elitism_percent= 0.2, cross_ratio= 0.9, 
-                              mutation_ratio= 0.4, max_iterations = 100000, 
-                              max_time= 10000)
+                              elitism_percent= 0.2, cross_ratio= 0.8, 
+                              mutation_ratio= 0.6, max_iterations = 1000,
+                              max_time= 100000)
     
-    best_solution, _, best_values = genAlg.run()
-    results, mean = genAlg.test(best_solution= best_solution)
-    print(results)
-    print('Média após teste:', mean)
+    best_solution, _, best_values = genAlg.run() # roda Dino conforme especificado
+    
+    results = genAlg.test(best_solution= best_solution) # testa a melhor solução retornada
+    
+    print('Média após teste:', np.mean(results))
 
-main()
+
+if __name__ == 'main':
+    main()
 
 
