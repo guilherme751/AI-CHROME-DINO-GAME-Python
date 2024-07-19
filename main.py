@@ -1,6 +1,6 @@
-from geneticAlgorithm import GeneticAlgorithm
+from src.geneticAlgorithm import GeneticAlgorithm
 import numpy as np
-from helper import parse_arguments
+from src.helper import parse_arguments
 
 def compute_args(args):
     pop_size = 100

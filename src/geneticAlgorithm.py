@@ -1,8 +1,8 @@
 import numpy as np
-from dinoAIParallel import manyPlaysResultsTrain, manyPlaysResultsTest
+from src.dinoAIParallel import manyPlaysResultsTrain, manyPlaysResultsTest
 import math, time
 from tqdm import tqdm
-from dinoAIParallel import RENDER_GAME
+
 
 class GeneticAlgorithm():
     def __init__(self, solution_size, population_size, elitism_percent, cross_ratio, 

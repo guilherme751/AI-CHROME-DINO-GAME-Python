@@ -1,7 +1,6 @@
 import pygame
 import os
 import random
-import time
 from sys import exit
 
 pygame.init()
@@ -386,7 +385,7 @@ def playGame(solutions):
 
 
 import numpy as np
-import time
+
 
 def manyPlaysResultsTrain(rounds,solutions):
     results = []
@@ -426,7 +425,7 @@ def discretizeCatVariables(obType):
 
     return type1
 
-from FNN import FNN
+from src.FNN import FNN
 
 class NeuralNetwork(KeyClassifier):
     def __init__(self, weights):
