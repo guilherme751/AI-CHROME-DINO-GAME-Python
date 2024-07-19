@@ -130,7 +130,6 @@ class GeneticAlgorithm():
         end = 0; iter = 0; self.best_score = -1
         bestvalues = []
         
-        
         with tqdm(total=self.max_iterations) as pbar:
             while iter < self.max_iterations and end-start <=self.max_time:
             
@@ -148,7 +147,7 @@ class GeneticAlgorithm():
             
                 self.population = self.new_pop + mutated  # nova população
                 pbar.set_description(
-                    f'Current Best: {best[0]:.2f}, Best Score: {self.best_score:.2f}'
+                    f'Population Best: {best[0]:.2f}, Best Score: {self.best_score:.2f}'
                 )
                 
                 pbar.update()
